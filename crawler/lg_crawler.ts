@@ -3,6 +3,15 @@
  */
 
 import * as rp from 'request-promise';
+import headers from './header';
+import * as cheerio from 'cheerio';
+
+const sleep = (num) => {
+  num = num * 1000;
+  return new Promise((resolve) => {
+    setTimeout(resolve(), num);
+  })
+}
 
 const dataParser = (data) => {
   try {
@@ -16,9 +25,10 @@ const dataParser = (data) => {
       results
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
+
 
 const crawlPage = async (city, kd, pn, opts = {}) => {
   try {
@@ -31,20 +41,131 @@ const crawlPage = async (city, kd, pn, opts = {}) => {
         pn,
         kd
       },
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-        'Cookie': 'JSESSIONID=FD1EC4E22FBC690AD41D386B5C3C0B29; user_trace_token=20170321194432-3e9e6674ba2843a493a1adb6030b9579; PRE_UTM=; PRE_HOST=www.bing.com; PRE_SITE=https%3A%2F%2Fwww.bing.com%2F; PRE_LAND=https%3A%2F%2Fwww.lagou.com%2F; LGUID=20170321194432-c017b291-0e2b-11e7-954c-5254005c3644; index_location_city=%E5%8C%97%E4%BA%AC; _gat=1; SEARCH_ID=72aa83ab2d9d40bdae448da4cacd77ea; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1490096673,1490096903; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1490096907; _ga=GA1.2.962477264.1490096673; LGSID=20170321194432-c017afa2-0e2b-11e7-954c-5254005c3644; LGRID=20170321194827-4c052583-0e2c-11e7-954c-5254005c3644; TG-TRACK-CODE=search_code'
-      }
+      headers
     }
+    await sleep(Math.random() * 30);
     let data = await rp(options);
-    // console.log(data);
     let job = dataParser(data);
+    console.log(job);
     return job;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
-export default crawlPage;
+const parseCity = async () => {
+  try {
+    let uri = `https://www.lagou.com/jobs/allCity.html`;
+    let options = {
+      method: 'get',
+      uri,
+      headers
+    }
+    await sleep(Math.random() * 30);
+    let body = await rp(options);
+    let $ = cheerio.load(body);
+    let a = $('.common_city').eq(0).find('a');
+    let commons = a.map((index, item) => $(item).text().trim());
+    a = $('.word_list a');
+    let citys = a.map((index, item) => $(item).text().trim());
+    console.log(commons);
+    console.log(citys);
+    return { commons, citys };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getHotWord = async () => {
+  try {
+    let uri = `https://service.lagou.com/hotword?callback`;
+    let options = {
+      method: 'get',
+      uri,
+      headers
+    }
+    await sleep(Math.random() * 30);
+    let body = await rp(options);
+    let reg = /\(([\w\W]+)\)\;/;
+    body = reg.exec(body)[1];
+    let obj = JSON.parse(body);
+    let hotwords = obj.hotwords;
+    console.log(hotwords);
+    return hotwords;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getHome = async () => {
+  try {
+    let uri = `https://www.lagou.com/`;
+    let options = {
+      method: 'get',
+      uri,
+      headers
+    }
+    await sleep(Math.random() * 30);
+    let body = await rp(options);
+    let $ = cheerio.load(body);
+    return $;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getCategorys = async ($) => {
+  try {
+    $ = $ || await getHome();
+    let h2 = $('.menu_main h2');
+    let cates = [], commonJobs = {};
+    h2.map((index, item) => {
+      let cate = $(item).text().trim();
+      cates.push(cate);
+      let jobs = $(item).nextAll('a').map((_index, _item) => $(_item).text().trim());
+      commonJobs[cate] = jobs;
+    })
+    console.log(cates);
+    console.log(commonJobs);
+    return { cates, commonJobs };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getJobs = async ($) => {
+  try {
+    $ = $ || await getHome();
+    let h2 = $('.menu_main h2');
+    let cates = [], allJobs = {};
+    h2.map((index, item) => {
+      let cate = $(item).text().trim();
+      cates.push(cate);
+      let temp = allJobs[cate] = {};
+      $(item).parent().nextAll('.menu_sub').find('dt').map((_index, _item) => {
+        let type = $(_item).text().trim();
+        let jobs = $(_item).next().children('a').map((__index, __item) => $(__item).text().trim());
+        temp[type] = jobs;
+      })
+    })
+    console.log(cates);
+    console.log(allJobs);
+    return { cates, allJobs };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export default {
+  crawlPage,
+  parseCity,
+  getHotWord,
+  getCategorys,
+  getJobs
+}
 
 // crawlPage('北京', 'nodejs', 1);
+// parseCity();
+getHotWord();
+// getCategorys('');
+// getJobs('');
