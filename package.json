@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "animate.css": "^3.5.2",
+    "canvas-nest.js": "^1.0.1",
     "lodash": "^4.17.4",
     "mongoose": "^4.9.1",
     "request": "^2.81.0",
