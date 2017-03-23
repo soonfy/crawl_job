@@ -4,6 +4,9 @@ import * as superagent from 'superagent';
 import * as sp from 'superagent-proxy';
 import * as fs from 'fs';
 
+import Models from '../app/models/index';
+const {IP} = Models;
+
 sp(superagent);
 
 /**
@@ -15,8 +18,7 @@ sp(superagent);
  */
 const getProxy = async (pn = 1) => {
   try {
-    let uri = `https://cnodejs.org/topic/50d41da5637ffa4155f63179`;
-    uri = `http://www.xicidaili.com/nn/${pn}`;
+    let uri = `http://www.xicidaili.com/nn/${pn}`;
 
     let options = {
       host: `221.216.194.177`,
@@ -70,7 +72,13 @@ const testProxy = async (file = './header/proxy.txt', count = 100) => {
         console.log(proxy);
         try {
           let ip = await superagent.get(uri).proxy(proxy).timeout(3000);
-          if (ip.statusCode === 200) {
+          if (ip.statusCode === 200 && ip.text.startsWith('{ip:')) {
+            let _ip = new IP({
+              proxy,
+              status: 0,
+              crawlAt: new Date()
+            })
+            await _ip.save();
             console.log(ip.text);
             let str = _proxy + '\t' + ip.text + '\r\n'
             fs.appendFileSync(file, str);

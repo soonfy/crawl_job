@@ -17,7 +17,7 @@ import headers from './header';
 const sleep = (num: number) => {
   num = num * 1000;
   return new Promise((resolve) => {
-    setTimeout(resolve(), num);
+    setTimeout(resolve, num);
   })
 }
 
@@ -229,7 +229,7 @@ const getJobs = async ($: cheerio, opts: Object = {}) => {
 }
 
 if (module.parent === null) {
-  // crawlPage('北京', 'nodejs', 1);
+  crawlPage('全国', 'nodejs', 1);
   // parseCity();
   // getHotWord();
   // getCategorys('');
@@ -237,6 +237,7 @@ if (module.parent === null) {
 }
 
 export default {
+  dataParser,
   crawlPage,
   parseCity,
   getHotWord,

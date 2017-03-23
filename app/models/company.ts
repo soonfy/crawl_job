@@ -41,7 +41,7 @@ const CompanySchema = new Schema({
   sofrom: {
     type: String
   }
-})
+}, { _id: false })
 
 const Company = mongoose.model('Company', CompanySchema, 'companys');
 
