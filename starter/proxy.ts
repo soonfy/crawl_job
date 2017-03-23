@@ -4,14 +4,15 @@ import * as superagent from 'superagent';
 import * as sp from 'superagent-proxy';
 import * as fs from 'fs';
 
-// const rp = require('request-promise');
-// const cheerio = require('cheerio');
-// const request = require('superagent');
-// require('superagent-proxy')(request);
-// const fs = require('fs');
-
 sp(superagent);
 
+/**
+ *
+ *  @description 输入proxy网站采集页数，输出proxy列表
+ *  @param {Number} pn
+ *  @returns {Array} proxys
+ *
+ */
 const getProxy = async (pn = 1) => {
   try {
     let uri = `https://cnodejs.org/topic/50d41da5637ffa4155f63179`;
@@ -28,7 +29,7 @@ const getProxy = async (pn = 1) => {
     }
     let body = await rp(options);
     let $ = cheerio.load(body);
-    let proxys = [];
+    let proxys: Array<string> = [];
     $('tr.odd').map((_index, _item) => {
       let proxy = [];
       proxy.push($(_item).children('td').eq(1).text().trim());
@@ -47,11 +48,20 @@ const getProxy = async (pn = 1) => {
   }
 }
 
+/**
+ *
+ *  @description 输入proxy保存路径，proxy网站采集页数，存储proxy
+ *  @param {String} file
+ *  @param {Number} count
+ *  @returns {Array} usefulProxys
+ *
+ */
 const testProxy = async (file = './header/proxy.txt', count = 100) => {
   try {
     let uri = `http://ip.chinaz.com/getip.aspx`;
-    let pn = 1;
+    let pn = 1, usefulProxys: Array<string> = [];
     while (pn <= count) {
+      console.log(`test page ${pn}`);
       let proxys = await getProxy(pn);
       ++pn;
       console.log(proxys.length);
@@ -62,7 +72,9 @@ const testProxy = async (file = './header/proxy.txt', count = 100) => {
           let ip = await superagent.get(uri).proxy(proxy).timeout(3000);
           if (ip.statusCode === 200) {
             console.log(ip.text);
-            fs.appendFileSync(file, _proxy + '\t' + ip.text + '\r\n');
+            let str = _proxy + '\t' + ip.text + '\r\n'
+            fs.appendFileSync(file, str);
+            usefulProxys.push(str);
           } else {
             console.error(`status code !== 200`);
             console.error(ip);
@@ -73,9 +85,15 @@ const testProxy = async (file = './header/proxy.txt', count = 100) => {
         }
       }
     }
+    console.log(`all proxys test over...`);
+    return usefulProxys;
   } catch (error) {
     console.error(error);
   }
 }
 
-testProxy();
+if (module.parent === null) {
+  testProxy();
+}
+
+export default testProxy;

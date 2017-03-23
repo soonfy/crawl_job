@@ -3,6 +3,13 @@ import * as cheerio from 'cheerio';
 import * as os from 'os';
 import * as fs from 'fs';
 
+/**
+ *
+ *  @description 输入ua保存路径，保存ua
+ *  @param {String} file
+ *  @returns {String} ua
+ *
+ */
 const crawlUA = async (file = `./header/ua.txt`) => {
   try {
     let uri = `http://www.useragentstring.com/pages/useragentstring.php?name=All`;
@@ -22,12 +29,17 @@ const crawlUA = async (file = `./header/ua.txt`) => {
     let uas = $('#liste li').map((_index, item) => $(item).text().trim());
     uas = Array.prototype.slice.call(uas);
     console.log(uas);
-    let str = uas.join(os.EOL);
-    fs.writeFileSync(file, str);
+    let ua: string = uas.join(os.EOL);
+    fs.writeFileSync(file, ua);
     console.log(`ua write to ${file}`);
+    return ua;
   } catch (error) {
     console.error(error);
   }
 }
 
-crawlUA();
+if (module.parent === null) {
+  crawlUA();
+}
+
+export default crawlUA;
