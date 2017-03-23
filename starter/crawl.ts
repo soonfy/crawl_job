@@ -60,18 +60,17 @@ const saveCompany = async (doc, opts = {}) => {
  */
 const start = async () => {
   try {
-    // let citys = (await parseCity()).commons;
-    let citys = ['北京'];
+    let citys = (await parseCity()).commons;
     citys = Array.prototype.slice.call(citys);
     console.log(citys);
     let index = 0;
     for (let city of citys) {
       console.log(city);
       ++index;
-      // if (index <= 1) {
-      //   continue;
-      // }
-      let kw = 'nodejs', pn = 1;
+      if (index <= 1) {
+        continue;
+      }
+      let kw = '自然语言处理', pn = 1;
       let sofrom = [city, kw, pn].join('-+-');
       let data = await crawlPage(city, kw, pn)
       let job = dataParser(data);
@@ -102,7 +101,6 @@ const start = async () => {
         await Promise.all(promises);
       }
       console.log(`${city} parse over...`);
-      process.exit();
     }
     console.log(`all citys over...`);
     process.exit();
