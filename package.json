@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "crawl": "node server/starter/crawl.js 1>logs/info.log 2>logs/error.log",
-    "demo": "node server/crawler/lg_crawler.js"
+    "crawl": "node server/starter/crawl.js 1>logs/crawl-info.log 2>logs/crawl-error.log",
+    "demo": "node server/crawler/lg_crawler.js",
+    "ua": "node server/starter/ua.js 1>logs/ua-info.log 2>logs/ua-error.log",
+    "proxy": "node server/starter/proxy.js 1>logs/proxy-info.log 2>logs/proxy-error.log"
   },
   "dependencies": {
     "body-parser": "~1.16.0",
@@ -23,6 +25,8 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.9.1",
     "request": "^2.81.0",
-    "request-promise": "^4.2.0"
+    "request-promise": "^4.2.0",
+    "superagent": "^3.5.2",
+    "superagent-proxy": "^1.0.2"
   }
 }

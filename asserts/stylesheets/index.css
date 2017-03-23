@@ -1,0 +1,26 @@
+.flex-container {
+  margin: 10em auto 0;
+  width: 25em;
+  /* Safari */
+  border: 1px solid #F9ED69;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.flex-children {
+  width: 30%;
+  height: 25em;
+}
+
+#tab {
+  height: 2em;
+}
+
+.no-active {
+  display: none;
+}
