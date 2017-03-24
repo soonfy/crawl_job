@@ -1,5 +1,6 @@
 /**
- * ip schema
+ *
+ * cookie schema
  * 
  */
 
@@ -7,8 +8,8 @@ import * as mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const IPSchema = new Schema({
-  proxy: {
+const CookieSchema = new Schema({
+  cookie: {
     type: String
   },
   status: {
@@ -19,6 +20,6 @@ const IPSchema = new Schema({
   }
 })
 
-const IP = mongoose.model('IP', IPSchema, 'ips');
+const Cookie = mongoose.model('Cookie', CookieSchema, 'cookies');
 
-export default IP;
+export default Cookie;

@@ -5,7 +5,8 @@
 import * as rp from 'request-promise';
 import * as cheerio from 'cheerio';
 
-import headers from './header';
+import header from './header';
+const {headers, getProxy} = header;
 
 /**
  *

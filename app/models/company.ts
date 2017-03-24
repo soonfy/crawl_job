@@ -1,4 +1,5 @@
 /**
+ *
  * company schema
  * 
  */
@@ -9,7 +10,8 @@ const Schema = mongoose.Schema;
 
 const CompanySchema = new Schema({
   companyId: {
-    type: Number
+    type: Number,
+    unique: true
   },
   companyLogo: {
     type: String
@@ -41,7 +43,7 @@ const CompanySchema = new Schema({
   sofrom: {
     type: String
   }
-}, { _id: false })
+}, { _id: false });
 
 const Company = mongoose.model('Company', CompanySchema, 'companys');
 

@@ -1,7 +1,8 @@
 import * as superagent from 'superagent';
 import * as sp from 'superagent-proxy';
 
-import headers from './header';
+import header from './header';
+const {headers, getProxy} = header;
 
 sp(superagent);
 

@@ -21,8 +21,6 @@ const getProxy = async (pn = 1) => {
     let uri = `http://www.xicidaili.com/nn/${pn}`;
 
     let options = {
-      host: `221.216.194.177`,
-      port: 808,
       uri,
       method: 'get',
       headers: {
@@ -78,7 +76,7 @@ const testProxy = async (file = './header/proxy.txt', count = 100) => {
               status: 0,
               crawlAt: new Date()
             })
-            await _ip.save();
+            // await _ip.save();
             console.log(ip.text);
             let str = _proxy + '\t' + ip.text + '\r\n'
             fs.appendFileSync(file, str);

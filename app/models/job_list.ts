@@ -1,4 +1,5 @@
 /**
+ *
  * job list schema
  * 
  */
@@ -9,7 +10,8 @@ const Schema = mongoose.Schema;
 
 const JobListSchema = new Schema({
   positionId: {
-    type: Number
+    type: Number,
+    unique: true
   },
   companyId: {
     type: Number
@@ -95,7 +97,7 @@ const JobListSchema = new Schema({
   sofrom: {
     type: Array
   }
-}, { _id: false })
+}, { _id: false });
 
 const JobList = mongoose.model('JobList', JobListSchema, 'joblists');
 
