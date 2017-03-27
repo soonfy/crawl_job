@@ -37,7 +37,7 @@ const CompanySchema = new Schema({
   companySize: {
     type: String
   },
-  crawlAt: {
+  create: {
     type: Date
   },
   sofrom: {

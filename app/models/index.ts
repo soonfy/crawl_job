@@ -44,13 +44,12 @@ let test = async () => {
     let doc = {
       proxy: 123
     }
+    console.log(new Date());
     await Proxy.uniSave(doc, console.log);
-    setTimeout(async () => {
-      await Proxy.uniSave(doc, console.log);
-    }, 1000 * 10)
+    console.log(new Date());
   } catch (error) {
     console.log(error);
   }
 }
 
-test();
+// test();

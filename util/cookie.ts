@@ -5,37 +5,36 @@ import * as fs from 'fs';
 
 /**
  *
- *  @description 输入cookie保存路径，存储cookie
- *  @param {String} file
+ *  @description 输入链接地址，输出cookie
+ *  @param {String} uri
  *  @returns {String} cookie
  *
  */
-const crawlCookie = async (file = `./header/cookie.txt`) => {
+const getCookie = async (uri: String = 'https://www.douban.com/') => {
   try {
-    let uri = `http://www.lagou.com`;
-    console.log(`crawl cookie from ${uri}`);
+    console.log(`[cookie] get cookie from <${uri}>`);
     let options = {
       uri,
-      method: 'get',
+      method: 'GET',
       headers: {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
       },
+      timeout: 1000 * 10,
       resolveWithFullResponse: true
     }
     let response = await rp(options);
-    console.log(response.headers);
     let cookie: string = response.headers['set-cookie'];
-    console.log(cookie);
-    fs.appendFileSync(file, cookie + '\r\n');
-    console.log(`ua write to ${file}`);
+    console.log(`[cookie] get cookie <${cookie}>`);
     return cookie;
   } catch (error) {
+    console.error(`[error] get cookie from <${uri}>`);
     console.error(error);
+    return await getCookie(uri);
   }
 }
 
 if (module.parent === null) {
-  crawlCookie();
+  getCookie();
 }
 
-export default crawlCookie
+export default getCookie

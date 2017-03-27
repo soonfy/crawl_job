@@ -23,7 +23,7 @@
     // 编译源文件
     "./crawler/*.ts",
     "./app/models/*.ts",
-    "./starter/*.ts"
+    "./util/*.ts"
   ],
   "exclude": [
     // 排除编译文件

@@ -15,7 +15,7 @@ const ProxySchema = new Schema({
   status: {
     type: Number
   },
-  crawlAt: {
+  create: {
     type: Date
   }
 }, { _id: false });
@@ -23,12 +23,11 @@ const ProxySchema = new Schema({
 ProxySchema.static('uniSave', async (doc, cb) => {
   try {
     let _self = this.default;
-    if (!('crawlAt' in doc)) {
-      doc.crawlAt = new Date;
-    }
-    console.log(doc);
-    // let _proxy = await _self.findOne({ proxy: doc.proxy }, doc, {upsert: true});
+    let _proxy = await _self.findOneAndUpdate({ proxy: doc.proxy }, doc, { upsert: true, new: true });
+    console.log(_proxy);
+    await cb(null, _proxy);
   } catch (error) {
+    console.error(`[proxyschema] unisave <${doc.proxy}> error...`);
     (cb || console.log)(error);
   }
 })
